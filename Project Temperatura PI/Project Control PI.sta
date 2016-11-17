@@ -1,6 +1,6 @@
 
-ROM used: 2357 (58%)
-          2619 (64%) including unused fragments
+ROM used: 2371 (58%)
+          2633 (64%) including unused fragments
 
           1 Average locations per line
           7 Average locations per statement
@@ -12,12 +12,12 @@ Stack used: 7 worst case (out of 8 total available)
 
 Lines Stmts  %   Files
 ----- ----- ---  -----
-   92    62  18  Project Control PI.c
-  299     0   0  C:\Program Files (x86)\PICC\devices\16f88.h
- 2104   238  69  C:\Program Files (x86)\PICC\drivers\math.h
+   95    65  19  Project Control PI.c
+  299     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f88.h
+ 2104   238  68  ..\..\..\..\..\..\Program Files (x86)\PICC\drivers\math.h
   243    46  13  flex_lcd.c
 ----- -----
- 2738   346 Total
+ 2741   349 Total
 
 Page ROM  %  RAM   Vol Diff  Functions:
 ---- --- --- ---   --- ----  ----------
@@ -35,7 +35,7 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     18   1   4   186  5.5  lcd_gotoxy
 0     43   2   1   272  4.1  lcd_putc
 0    251  11  12   885  5.3  int_tiempo0
-1    571  24  20  1163  4.8  MAIN
+1    585  25  20  1290  4.8  MAIN
 0     13   1   0             @const221
  Inline        5             @FTOSD
 0     66   3  13             @DIV3232
@@ -44,12 +44,12 @@ Page ROM  %  RAM   Vol Diff  Functions:
 
 Program metrics:
     Functions               8
-    Statements              346
+    Statements              349
     Comments                364
-    Volume (V)              5889
-    Difficilty (D)          39.2
-    Effort to implement (E) 230950
-    Time to implement (T)   3 hours, 34 minutes
+    Volume (V)              6047
+    Difficilty (D)          39.3
+    Effort to implement (E) 237569
+    Time to implement (T)   3 hours, 40 minutes
     Est Delivered Bugs (B)  1
     Cyclomatic Complexity   16
     Maintainability (MI)    32
@@ -59,7 +59,7 @@ Program metrics:
 00000-00003     4  0  
 00004-00034    49  0  
 00035-007FF  1733  262  
-00800-00FFF   571  1477  
+00800-00FFF   585  1463  
 
 
 

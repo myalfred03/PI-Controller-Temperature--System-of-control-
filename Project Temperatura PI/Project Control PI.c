@@ -63,6 +63,8 @@ setup_vref(FALSE);
    setup_wdt(WDT_OFF);
    setup_timer_0(RTCC_8_BIT|RTCC_DIV_128);
    setup_timer_1(T1_DISABLED);
+   setup_timer_2(T2_DIV_BY_16, 25, 3);
+   setup_ccp1(CCP_PWM); 
    enable_interrupts(INT_TIMER0);
    enable_interrupts(global);
 set_tris_A(0x10);
@@ -76,6 +78,7 @@ lcd_init();                      //Inicializamos el LCD.
 lcd_putc("\fTemp. =");      //
 LSB=5/1024.0; 
 while(1){
+set_pwm1_duty (200);
 rtdv=(valor*LSB)/48.40;                    /* Calculate volt rtdr  */
 rtdr = (rtdv*10000.0)/(5.0-rtdv);          /* Calculate RTD resistance rtdr  */ 
 y = (0.15274) - ((rtdr-100.0)*(2310.0e-7)); 
