@@ -1,0 +1,6 @@
+>>> Warning 203 "Project Control PI.c" Line 78(1,1): Condition always TRUE
+>>> Warning 216 "Project Control PI.c" Line 93(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 216 "Project Control PI.c" Line 93(0,1): Interrupts disabled during call to prevent re-entrancy:  (@DIVFF)
+>>> Warning 216 "Project Control PI.c" Line 93(0,1): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
+      Memory usage:   ROM=58%      RAM=17% - 33%
+      0 Errors,  4 Warnings.
