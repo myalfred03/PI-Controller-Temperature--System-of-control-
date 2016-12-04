@@ -1,11 +1,11 @@
 #include <16f88.h>//pic a utilizar
 #device adc=10
-#FUSES NOWDT, HS NOPUT,NOBROWNOUT,MCLR, NOLVP, NOCPD, NOPROTECT,INTRC_IO,CCPB0 //si pongo CCPB3
+#FUSES NOWDT, HS NOPUT,NOBROWNOUT,MCLR, NOLVP, NOCPD, NOPROTECT,INTRC_IO,CCPB0,NOPUT //si pongo CCPB3
 #BYTE OSCCON = 0b01110000
 #use delay (internal=8MHZ)
 #include <math.h>
 #include "flex_lcd.c"  //Llamada a la libreria lcd.c
-#use rs232(baud=9600,BITS =8,PARITY=N, xmit=PIN_B5, rcv=PIN_B2)
+#use rs232(baud=9600,BITS =8,PARITY=N, xmit=PIN_B5, rcv=PIN_B2, stream=HOSTPC,errors)
 unsigned int contRTCC=0,set_point=60;
 float LSB=0.004882,y,rtdv,rtdr;
 float a=9.53,b=0.918/0.9,rkt,ekt,pkt,qkt,ukt,MA=1000.0,MI=0.0,pkt_1=0.0,ekt_1=0.0;
@@ -13,9 +13,27 @@ int16 valor,Control,Duty;
 float temp1,Ptemp[4],D;
 int datoTX[2];
 short val=0;
+char c;
 
 //T=(4/fosc * PREESCALER )(256-Carga en el timer)   T-> tiempo de desborde del timer.
- 
+
+//INTERRUPCION RDA RECEPCION DE DATOS SERIE
+#int_RDA
+VOID RDA_ISR(VOID)
+{
+c=fgetc(HOSTPC);
+PUTC(C);
+}
+
+
+
+//ENVIO DE DATOS SERIE
+void envioUART(int16 ADC){
+   datoTX[0]=ADC >> 8;     //Asignacion de desplazamiento hacia la derecha                                            
+   datoTX[1]=ADC & 0xFF;   //Asignacion AND de Bits  
+   putc(datoTX[0]);           
+   putc(datoTX[1]);          //Envio de Datos 
+}
 
 float calculos_rtd(int16 ADC) {
                 float temp;
@@ -91,6 +109,9 @@ delay_ms(1);
 output_toggle(PIN_A0);
 delay_ms(10);
 temp1=(Ptemp[0]+Ptemp[1]+Ptemp[2]+Ptemp[3])/4;
+lcd_gotoxy(2,2);
+printf(lcd_putc,"TEMP %4.2f",temp1);
+delay_ms(200);
    contRTCC=0;
 }
 
@@ -99,8 +120,8 @@ temp1=(Ptemp[0]+Ptemp[1]+Ptemp[2]+Ptemp[3])/4;
 
 }
 
-void main(){
-char c;
+void main(void){
+char a;
 //float y,rtdv,rtdr,LSB;
 setup_oscillator(OSC_8MHZ | OSC_INTRC);
 setup_comparator(NC_NC_NC_NC);
@@ -118,26 +139,35 @@ setup_adc_ports(sAN4|VSS_VDD);
 setup_adc(ADC_CLOCK_INTERNAL);
 set_adc_channel(4);
 lcd_init();                      //Inicializamos el LCD.
-lcd_putc("\fDuty. =");      //
-while(1){
+lcd_putc("\fControl =");      //
 
-   D=calculos_pid(temp1);
-   Duty=(int16)D;
-   Control=((1000-Duty));
-   set_pwm1_duty(Control);
-
-lcd_gotoxy(10,1);
-printf(lcd_putc,"%lu",Control);
-delay_ms(300);
-lcd_gotoxy(2,2);
-printf(lcd_putc,"TEMP %4.2f",temp1);
-delay_ms(200);
-
-datoTX[0]=valor >> 8;   //Asignacion de desplazamiento
-                             //hacia la derecha
-datoTX[1]=valor & 0xFF; //Asignacion AND de Bits  
-            //Tiempo de Muestreo Señal
-   putc(datoTX[0]);           
-   putc(datoTX[1]);          //Envio de Datos
+    //  do {
+    while(1)
+    {
+            D=calculos_pid(temp1);
+            Duty=(int16)D;
+            Control=((1000-Duty));
+            set_pwm1_duty(Control);
+            lcd_gotoxy(9,1); 
+            printf(lcd_putc,"PI %lu",Control);
+            delay_ms(300);
+     //c=fgetc(HOSTPC);
+     a=c;
+     delay_us(100);
+          //} while(a!='1' && a!='2' && a!='3');
+ switch (a)
+           {
+            case '1': 
+            {
+            D=calculos_pid(temp1);
+            Duty=(int16)D;
+            Control=((1000-Duty));
+            set_pwm1_duty(Control);
+            lcd_gotoxy(9,1); 
+            printf(lcd_putc,"PI1 %lu",Control);
+            envioUART(valor);
+            }
+   
+          }  //end Switch
 }
 }

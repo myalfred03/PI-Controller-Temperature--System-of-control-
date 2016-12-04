@@ -1,0 +1,60 @@
+
+ROM used: 579 (14%)
+          579 (14%) including unused fragments
+
+          1 Average locations per line
+          8 Average locations per statement
+
+RAM used: 24 (7%) at main() level
+          43 (12%) worst case
+
+Stack used: 5 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   95    24  34  Project Control PI.c
+  299     0   0  ..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f88.h
+  243    46  66  flex_lcd.c
+----- -----
+  637    70 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     20   3   1             @delay_ms1
+0      8   1   0             @const54
+0     41   7   1   326  2.8  lcd_send_nibble
+0     39   7   3   235  3.8  lcd_send_byte
+0     46   8   2   380  4.7  lcd_init
+ Inline        4   186  5.5  lcd_gotoxy
+0     53   9   1   272  4.1  lcd_putc
+ Inline        0             @GETCH_BIU_1
+0    136  23   1    52  1.9  serial_ISR
+0     12   2   0   149  3.1  @const83
+0     21   4   3   444  4.6  @DIV88
+ Inline        6   727  4.7  @PRINTF_D_9600_53_50
+0     14   2   2   149  3.1  envioUART
+0    108  19   2   444  4.6  MAIN
+0     15   3   0             @const95
+0     11   2   0             @const96
+
+Program metrics:
+    Functions               11
+    Statements              70
+    Comments                158
+    Volume (V)              5448
+    Difficilty (D)          42.5
+    Effort to implement (E) 231420
+    Time to implement (T)   3 hours, 34 minutes
+    Est Delivered Bugs (B)  1
+    Cyclomatic Complexity   11
+    Maintainability (MI)    89
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00036    51  0  
+00037-007FF   524  1469  
+00800-00FFF     0  2048  
+
+
+

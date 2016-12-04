@@ -1,6 +1,11 @@
->>> Warning 203 "Project Control PI.c" Line 80(1,1): Condition always TRUE
->>> Warning 216 "Project Control PI.c" Line 96(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
->>> Warning 216 "Project Control PI.c" Line 96(0,1): Interrupts disabled during call to prevent re-entrancy:  (@DIVFF)
->>> Warning 216 "Project Control PI.c" Line 96(0,1): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
-      Memory usage:   ROM=58%      RAM=17% - 33%
-      0 Errors,  4 Warnings.
+>>> Warning 203 "Project Control PI.c" Line 122(1,1): Condition always TRUE
+>>> Warning 216 "Project Control PI.c" Line 145(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 216 "Project Control PI.c" Line 145(0,1): Interrupts disabled during call to prevent re-entrancy:  (@ITOF)
+>>> Warning 216 "Project Control PI.c" Line 145(0,1): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
+>>> Warning 216 "Project Control PI.c" Line 145(0,1): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
+>>> Warning 216 "Project Control PI.c" Line 145(0,1): Interrupts disabled during call to prevent re-entrancy:  (@FLT)
+>>> Warning 202 "Project Control PI.c" Line 11(38,41): Variable never used:   qkt
+>>> Warning 202 "Project Control PI.c" Line 15(7,10): Variable never used:   val
+>>> Warning 202 "Project Control PI.c" Line 103(6,7): Variable never used:   c
+      Memory usage:   ROM=83%      RAM=31% - 52%
+      0 Errors,  9 Warnings.
