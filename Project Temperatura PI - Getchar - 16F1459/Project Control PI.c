@@ -1,4 +1,4 @@
-#include <16f88.h>//pic a utilizar
+#include <16f1459.h>//pic a utilizar
 #device adc=10
 #FUSES NOWDT, HS NOPUT,NOBROWNOUT,MCLR, NOLVP, NOCPD, NOPROTECT,INTRC_IO,CCPB0,NOPUT //si pongo CCPB3
 #BYTE OSCCON = 0b01110000
@@ -189,7 +189,7 @@ lcd_putc("\fControl =");      //
             lcd_gotoxy(9,1); 
             printf(lcd_putc,"PI1 %lu",Control);
             delay_ms(100);
-            //envioUART(valor);
+            envioUART(valor);
             goto inicio;
             
             }

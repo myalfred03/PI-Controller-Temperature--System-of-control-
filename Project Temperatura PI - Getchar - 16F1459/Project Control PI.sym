@@ -1,0 +1,219 @@
+004     @WRITE_PROGRAM_MEMORY8.P1
+004-005 @READ_PROGRAM_MEMORY8.P2
+015     CCP_1_HIGH
+015     CCP_1
+015     CCP_1_LOW
+020     @INTERRUPT_AREA
+021     @INTERRUPT_AREA
+022     @INTERRUPT_AREA
+023     @INTERRUPT_AREA
+024     @INTERRUPT_AREA
+025     @INTERRUPT_AREA
+026     @INTERRUPT_AREA
+027     @INTERRUPT_AREA
+028     @INTERRUPT_AREA
+029     @INTERRUPT_AREA
+02A     rs232_errors
+02B     contRTCC
+02C-02F y
+030-033 rtdv
+034-037 rtdr
+038-03B rkt
+03C-03F ekt
+040-043 pkt
+044-047 qkt
+048-04B ukt
+04C-04F pkt_1
+050-053 ekt_1
+054-055 valor
+056-057 Control
+058-059 Duty
+05A-05D temp1
+05E-06D Ptemp
+06E-071 d
+070     OSCCON
+072-073 datoTX
+074     c
+075     state
+076     MAIN.v
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+07B     @SCRATCH
+07C     lcd_init.i
+07C-07D envioUART.ADC
+07C     MAIN.@SCRATCH1
+07D-07E @PRINTF_LU_202.P1
+07D     lcd_init.@SCRATCH1
+09C.6   C1OUT
+09C.7   C2OUT
+0A0-0A3 @SFTOI.P1
+0A0     calculos_pid.@SCRATCH1
+0A0     @PRINTF_LU_202.@SCRATCH1
+0A1     calculos_pid.@SCRATCH2
+0A1     @PRINTF_LU_202.@SCRATCH2
+0A2     calculos_pid.@SCRATCH3
+0A2     @PRINTF_LU_202.@SCRATCH3
+0A3     calculos_pid.@SCRATCH4
+0A3     @PRINTF_LU_202.@SCRATCH4
+0A4     @PRINTF_LU_202.@SCRATCH5
+0A5     @PRINTF_LU_202.@SCRATCH6
+0A6     @PRINTF_LU_202.@SCRATCH7
+0C7-0C8 calculos_rtd.ADC
+0C7     int_tiempo0.@SCRATCH1
+0C8-0CB @PRINTF_L32D_202FPFPF.P1
+0C8     int_tiempo0.@SCRATCH2
+0C9-0CC calculos_rtd.temp
+0C9     int_tiempo0.@SCRATCH3
+0CA     int_tiempo0.@SCRATCH4
+0CB     int_tiempo0.@SCRATCH5
+0CC     @PRINTF_L32D_202FPFPF.P1
+0CC     int_tiempo0.@SCRATCH6
+0CD-0CE @ITOF.P1
+0CD-0D0 sqrt.x
+0CD     calculos_rtd.@SCRATCH1
+0CD     int_tiempo0.@SCRATCH7
+0CD     @PRINTF_L32D_202FPFPF.@SCRATCH1
+0CE     calculos_rtd.@SCRATCH2
+0CE     int_tiempo0.@SCRATCH8
+0CE     @PRINTF_L32D_202FPFPF.@SCRATCH2
+0CF     calculos_rtd.@SCRATCH3
+0CF     int_tiempo0.@SCRATCH9
+0CF     @PRINTF_L32D_202FPFPF.@SCRATCH3
+0D0     calculos_rtd.@SCRATCH4
+0D0     int_tiempo0.@SCRATCH10
+0D0     @PRINTF_L32D_202FPFPF.@SCRATCH4
+0D1-0D4 sqrt.y
+0D1     int_tiempo0.@SCRATCH11
+0D1     @PRINTF_L32D_202FPFPF.@SCRATCH5
+0D2     int_tiempo0.@SCRATCH12
+0D2     @PRINTF_L32D_202FPFPF.@SCRATCH6
+0D3     @PRINTF_L32D_202FPFPF.@SCRATCH7
+0D4     @PRINTF_L32D_202FPFPF.@SCRATCH8
+0D5     lcd_putc.c
+0D5-0D8 @FTOSD.P1
+0D5-0D8 @MULFF.P2
+0D5-0D8 @DIV3232.P3
+0D5-0D8 sqrt.res
+0D6     lcd_gotoxy.x
+0D6     @delay_ms1.P1
+0D7     lcd_gotoxy.y
+0D8     lcd_gotoxy.address
+0D9-0DC @DIV3232.P1
+0D9-0DA sqrt.p
+0D9-0DC @MULFF.P1
+0D9     lcd_gotoxy.@SCRATCH1
+0D9     @FTOSD.@SCRATCH1
+0DA     lcd_send_byte.address
+0DB-0DE @DIVFF.P1
+0DB-0DE @FLT.P2
+0DB     lcd_send_byte.n
+0DB-0DE @ADDFF.P1
+0DB     sqrt.@SCRATCH1
+0DC     sqrt.@SCRATCH2
+0DC     lcd_send_byte.@SCRATCH1
+0DD     lcd_send_nibble.nibble
+0DD     @MULFF.@SCRATCH1
+0DD     sqrt.@SCRATCH3
+0DD     @DIV3232.@SCRATCH1
+0DE     @MULFF.@SCRATCH2
+0DE     sqrt.@SCRATCH4
+0DE     @DIV3232.@SCRATCH2
+0DF-0E2 @DIVFF.P1
+0DF-0E2 @FLT.P2
+0DF-0E2 @ADDFF.P3
+0DF     @MULFF.@SCRATCH3
+0DF     sqrt.@SCRATCH5
+0DF     @DIV3232.@SCRATCH3
+0E0     @MULFF.@SCRATCH4
+0E0     sqrt.@SCRATCH6
+0E0     @DIV3232.@SCRATCH4
+0E1     @MULFF.@SCRATCH5
+0E1     sqrt.@SCRATCH7
+0E1     @DIV3232.@SCRATCH5
+0E3     @FLT.@SCRATCH1
+0E3     @DIVFF.@SCRATCH1
+0E3     @ADDFF.@SCRATCH1
+0E4     @FLT.@SCRATCH2
+0E4     @DIVFF.@SCRATCH2
+0E4     @ADDFF.@SCRATCH2
+0E5     @DIVFF.@SCRATCH3
+0E5     @ADDFF.@SCRATCH3
+0E6     @DIVFF.@SCRATCH4
+0E6     @ADDFF.@SCRATCH4
+0E7     @DIVFF.@SCRATCH5
+0E7     @ADDFF.@SCRATCH5
+0E8     @DIVFF.@SCRATCH6
+0E8     @ADDFF.@SCRATCH6
+0E9     @ADDFF.@SCRATCH7
+0EA     @ADDFF.@SCRATCH8
+10D-10E @READ_PROGRAM_MEMORY8.P1
+10D-10E @WRITE_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+0082  @delay_ms1
+033E  @FLT
+079D  @SFTOI
+0096  @ITOF
+012C  @DIVFF
+01F8  @ADDFF
+00B5  @MULFF
+037F  sqrt
+003D  LCD_INIT_STRING
+055B  lcd_send_nibble
+058E  lcd_send_byte
+073F  lcd_init
+05B9  lcd_gotoxy
+05CD  lcd_putc
+006F  @GETCH_BIU_1
+006F  RDA_ISR
+07BE  envioUART
+041D  calculos_rtd
+0995  calculos_pid
+0800  int_tiempo0
+0045  @const246
+05FE  @FTOSD
+061F  @DIV3232
+0663  @PRINTF_L32D_202FPFPF
+0BB1  MAIN
+0054  @const258
+0B40  @PRINTF_LU_202
+0063  @const263
+0BB1  @cinit
+0CB4  inicio
+
+
+User Memory space: 
+
+Project Directory:
+    C:\Users\YESSER-M\Documents\GitHub\PI-Controller-Temperature--System-of-control-\Project Temperatura PI - Getchar\
+
+Project Files:
+    Project Control PI.c
+    ..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f88.h
+    ..\..\..\..\..\..\Program Files (x86)\PICC\drivers\math.h
+    flex_lcd.c
+
+Units:
+    Project Control PI.c (main)
+
+Compiler Settings:
+    Processor:      PIC16F88
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Project Control PI.err
+    Ext Symbols: Project Control PI.esym
+    INHX8:       Project Control PI.hex
+    Symbols:     Project Control PI.sym
+    List:        Project Control PI.lst
+    Debug/COFF:  Project Control PI.cof
+    Project:     Project Control PI.PJT
+    Call Tree:   Project Control PI.tre
+    Statistics:  Project Control PI.sta

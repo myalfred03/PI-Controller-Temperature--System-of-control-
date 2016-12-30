@@ -1,0 +1,7 @@
+*** Error 18 "Project Control PI.c" Line 1(9,36): File can not be opened
+    Not in "C:\Program Files (x86)\PICC\devices\16f1459.h"
+    Not in "C:\Program Files (x86)\PICC\drivers\16f1459.h"
+    Not in local "C:\Users\YESSER-M\Documents\GitHub\PI-Controller-Temperature--System-of-control-\Project Temperatura PI - Getchar - 16F1459\16f1459.h"
+*** Error 128 "Project Control PI.c" Line 2(9,15): A #DEVICE required before this line
+*** "Project Control PI.c" Line 4: Error #128: A #DEVICE required before this line
+      3 Errors,  0 Warnings.

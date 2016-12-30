@@ -1,0 +1,5 @@
+>>> Warning 203 "Project Control PI.c" Line 77(1,1): Condition always TRUE
+>>> Warning 202 "Project Control PI.c" Line 7(5,8): Variable never used:   rs232_errors
+>>> Warning 202 "Project Control PI.c" Line 8(5,13): Variable never used:   contRTCC
+      Memory usage:   ROM=14%      RAM=7% - 12%
+      0 Errors,  3 Warnings.

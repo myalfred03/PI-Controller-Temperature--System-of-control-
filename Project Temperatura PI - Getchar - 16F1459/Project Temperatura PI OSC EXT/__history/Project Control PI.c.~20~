@@ -1,0 +1,397 @@
+               //******************************************************
+               //Project        : Diseño Control PI V3.0 
+               //Purpose        : Regulacion de temperatura 
+               //Auther         : YESSER MORALES 
+               //Company        : UNI 
+               //Hardware       : PIC16F1459
+               //DATE           : December, 6th 2016
+               //**********************************************************
+#include <16f1459.h>       //Pic a utilizar.
+#device adc=10             //Resolucion de ADC.
+#FUSES NOWDT, HS, NOPUT,NOBROWNOUT,MCLR, NOLVP,INTRC_IO, NOPROTECT,NOPUT //Fuses de Configuracion del pic, Ejemplo INTRC_IO declara un reloj interno.
+//#BYTE OSCCON = 0b00111000  //Ajuste del registro de reloj, en este caso ajustando a una Frecuencia de 8MHZ
+#use delay (clock=4MHZ) //La funcion delay usara el reloj interno
+#include <math.h>          //Habilitacion de la libreria de Calculos matematicos
+#include <string.h>
+#INCLUDE <stdlib.h>
+//#include <stdio.h>
+
+//Declaracion de registros especiales sin necesidad de uso de funciones propias del Compilador
+#BYTE PWM2CON=getenv("SFR:PWM2CON") 
+#BYTE PWM1CON=getenv("SFR:PWM1CON") 
+
+#include "flex_lcd.c"      //Llamada a la libreria con su propia configuracion Esta esta dentro de la carpeta de compilacion
+#use rs232(baud=9600,BITS=8,PARITY=N, xmit=PIN_B7, rcv=PIN_B5, stream=HOSTPC,errors)  //Configuracion de comunicacion serial UART 
+#use pwm(PWM1, OUTPUT=PIN_C5, TIMER=2, FREQUENCY=1000, STREAM=P1)                      //Configuracion de PWM1
+
+//Declaracion de Constantes
+
+#define a 9.53
+#define b 0.918
+#define a1 13.74
+#define b1 1.30
+#define c 3.20
+#define MA 1000.0
+#define MI 0.0
+#define LSB 0.004882 
+
+//Declaracion de Variables
+unsigned int contRTCC=0;
+float y,rtdv,rtdr;
+float rkt,ekt,pkt,ukt,pkt_1=0.0,ekt_1=0.0;
+float rktd,ektd,pktd,qktd,uktd,pktd_1=0.0,ektd_1=0.0;
+int16 Controld,Dutyd;
+int16 valor,Control,Duty;
+float temp1,D,Dd;
+int set_point=60;
+int v1[2];
+int nb,i,flag;
+char ch[2],g[1];
+enum {Esperando,Ajustando,EleccionPI,cPI,EleccionPID,cPID,envioDT}state;
+//INTERRUPCION RDA RECEPCION DE DATOS SERIE
+#int_RDA
+void RDA_ISR(VOID)
+{
+//setup_wdt(WDT_ON);
+ch[1]=0;
+
+for (i=0;i<2;i++)
+{
+ch[i]=getch();
+
+if(i==0){
+
+delay_ms(1);
+v1[0]=ch[0]-48;
+delay_ms(100);
+}
+if(i==1){
+v1[1]=ch[1]-48;
+g[0]=ch[1];
+delay_ms(100);
+
+}
+}
+           nb=((10*v1[0])+v1[1]);
+           Set_point=nb;
+          
+putchar(ch[1]);
+//sleep();
+
+}
+
+
+
+//ENVIO DE DATOS SERIE
+void envioUART(float temp){
+   //datoTX[0]=ADC >> 8;     //Asignacion de desplazamiento hacia la derecha                                            
+  // datoTX[1]=ADC & 0xFF;   //Asignacion AND de Bits  
+  // putc(datoTX[0]);           
+  // putc(datoTX[1]);          //Envio de Datos 
+  printf("Temp=%3.2F",temp);
+  delay_ms(10);
+}
+
+//CALCULOS DE RTD
+float calculos_rtd(int16 ADC) {
+                float temp;
+rtdv=(ADC*LSB)/46.10;                    /* Calculate volt rtdr  */
+rtdr = (rtdv*10000.0)/(5.0-rtdv);          /* Calculate RTD resistance rtdr  */ 
+y = (0.15274) - ((rtdr-100.0)*(2310.0e-7));   //CT1 CT2 55C
+y = sqrt(y) ;
+temp = (y-0.39083)/(-0.0001155);
+//temp=rtdv*100;
+    return temp;
+}
+
+//CALCULOS DE PI
+float calculos_pi(float &t, int &SP) {
+        float ct;
+rkt=SP;
+
+  /* Calculate error */
+  ekt=rkt-t;
+  /*end  Calculate error */
+
+  /* Calculate I term */
+  pkt=b*ekt+pkt_1;
+  /*end  Calculate I term */
+
+  /* Calculate PI output */
+   ukt=pkt+a*ekt;
+  /*end Calculate PI output */
+
+  if(ukt > MA) {
+  pkt=pkt_1;
+  ukt =MA;     }
+  else if(ukt < MI)
+  { pkt=pkt_1;
+  ukt=MI;      }
+
+  duty=ukt;
+  //D=calculos_pid(temp1);
+  D=(int16)duty;
+  Ct=((1000-D));
+
+  pkt_1 = pkt ;
+  ekt_1= ekt;
+             
+ return ct; 
+}
+
+//CALCULOS PID
+float calculos_pid(float t1,int SP1) {
+        float ctd;
+rktd=SP1;
+
+  /* Calculate error */
+  ektd=rktd-t1;
+  /*end  Calculate error */
+
+  /* Calculate I term */
+  pktd=b1*ektd+pktd_1;
+  /*end  Calculate I term */
+  
+  /* Calculate D term */ 
+     qktd=c*(ektd-ektd_1);
+
+  /* Calculate PI output */
+   uktd=pktd+a1*ektd+qktd;
+  /*end Calculate PI output */
+
+  if(uktd > MA) {
+  pktd=pktd_1;
+  uktd =MA;     }
+  else if(uktd < MI)
+  { pktd=pktd_1;
+  uktd=MI;      }
+
+  dutyd=uktd;
+  Dd=(int16)dutyd;
+  Ctd=((1000-Dd));
+
+  pktd_1 = pktd ;
+  ektd_1= ektd;
+                
+ return ctd; 
+}
+
+//TIMER 0 CICLOS
+#int_timer0
+void int_tiempo0(void){
+++contRTCC;
+if(contRTCC==50){
+
+flag=1;
+output_toggle(PIN_A5);
+delay_ms(10);
+          
+ //promedio de medicion 
+  }           
+
+if(contRTCC==50){
+
+delay_ms(10);
+flag=0;
+output_toggle(PIN_A5);
+delay_ms(10);
+          
+ //promedio de medicion 
+   contRTCC=0;
+}
+}
+
+void main(void){
+int SPTU;
+char v[2];
+
+
+   PWM_ON(P1);                 //configuracion del pwm
+   PWM_SET_FREQUENCY(P1,1000);
+   PWM1CON=0xE0;
+  // setup_oscillator(OSC_8MHZ | OSC_INTRC); //ajustando oscilador interno
+   setup_comparator(NC_NC_NC_NC);
+   setup_vref(FALSE);
+   setup_wdt(WDT_OFF);
+   setup_timer_0(RTCC_8_BIT|RTCC_DIV_128); // Desborde del timer cada T1 = 32.768ms-> 4MHZ T = 16.384ms-> 8MHZ -> T=(4/fosc * PREESCALER )(256-Carga en el timer)   T-> Periodo de desborde del timer. 
+   setup_timer_1(T1_DISABLED);
+   setup_timer_2(T2_DIV_BY_4, 250, 1);
+   enable_interrupts(INT_TIMER0);
+   enable_interrupts(INT_RDA);
+   enable_interrupts(global);
+   set_tris_A(0x10);
+   set_tris_c(0x04);              
+   set_tris_B(0x30);               //entradas y salidas del puerto B prioridad Entrada RS232
+   setup_adc_ports(sAN6|VSS_VDD);
+   setup_adc(ADC_CLOCK_INTERNAL);
+   set_adc_channel(6);
+   lcd_init();                   //Inicializamos el LCD.
+      lcd_putc("\fSetpoint");      //65
+      valor=read_adc();
+      delay_ms(5);
+      temp1=calculos_rtd(valor);
+      lcd_gotoxy(10,2);
+      printf(lcd_putc,"T%4.2f",temp1);
+      delay_ms(10);    
+      lcd_putc("\f");
+      state = Esperando;                                                                                          
+while(1){
+   v[0]=g[0];  
+   delay_ms(10);
+ switch (state)
+           {
+            case Esperando: 
+           {  
+            v[0]=g[0];
+
+          if(flag==1)  {
+           valor=read_adc();
+           delay_ms(10);
+
+           }     
+           
+            temp1=calculos_rtd(valor);
+            Control=calculos_pi(temp1,Set_point);
+            set_pwm1_duty(Control);
+            //lcd_putc("Setpoint");
+            lcd_gotoxy(1,1); 
+            printf(lcd_putc,"\fSetpoint V: %d",Set_point);
+            delay_ms(10);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"D:%4lu T:%4.2f",Control,temp1);
+            delay_ms(10);
+            envioUART(temp1);
+            printf("DEFAULT");
+            delay_ms(10);
+            if (v[0]=='1') {
+            state = Ajustando;
+ 
+                        }
+            break; 
+           }
+            
+            case Ajustando: 
+             { 
+             v[0]=g[0];
+            lcd_gotoxy(1,1);
+            printf(lcd_putc,"\fFavor ingrese ");
+            delay_ms(100);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"Tipo de control");
+            printf("Tipo de control?");
+            delay_ms(100);
+            if (v[0]=='2') {
+            state = EleccionPI;
+            v[0]=0;
+ 
+                        }
+            else if (v[0]=='3') {
+            state = EleccionPID;
+ 
+                        }
+                        
+            break;
+             }
+             
+             case EleccionPI: 
+             { 
+    //       nb=((10*v1[0])+v1[1]);  70
+      //     Set_point=nb;
+            if (nb>0) {
+            state = cPI;
+ 
+          }
+              lcd_gotoxy(9,1);
+            printf(lcd_putc,"\fControl PI ");
+            delay_ms(100);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"Ingrese Set Point");
+            delay_ms(100);
+            printf("Set Point?");
+             break;
+             
+            
+             }  
+             
+              case cPI: 
+             { v[0]=g[0];
+          //    if(flag==1){
+                  valor=read_adc();
+                  delay_ms(30);
+          //               }
+           SPTU=set_point;
+            temp1=calculos_rtd(valor);
+            Control=calculos_pi(temp1,Set_point);
+            set_pwm1_duty(Control);
+            lcd_gotoxy(1,1); 
+            printf(lcd_putc,"\fSetpoint V: %d",SPTU);
+            delay_ms(10);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"D:%4lu T:%4.2f",control,temp1);
+            delay_ms(40); 
+            envioUART(temp1);
+            printf("Control PI");
+            delay_ms(10);
+            if (v[0]=='1') {
+            state = Ajustando;
+ 
+            }
+             break;
+             
+            
+             }  
+             
+              case EleccionPID: 
+             { 
+             v[0]=g[0];
+            lcd_gotoxy(1,1);
+            printf(lcd_putc,"\fControl PID ");
+            delay_ms(10);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"Ingrese Set Point");
+            delay_ms(10);
+            nb=v-48;
+            Set_point=nb;
+            if (nb>4||nb<<100) {
+            state = cPID;
+          //  printf("Set Point?");
+            }
+             break;
+             
+            
+             }  
+             
+           case cPID: 
+             { v[0]=g[0];
+              if(flag==1){
+            valor=read_adc();
+            delay_ms(1);
+          }
+           
+           //  nb=((10*v1[0])+v1[1]);
+             //Set_point=nb;
+             temp1=calculos_rtd(valor);
+             Controld=calculos_pid(temp1,Set_point);
+             set_pwm1_duty(Controld);
+            lcd_gotoxy(1,1); 
+            printf(lcd_putc,"\fSetpoint V %d",Set_point);
+            delay_ms(100);
+            lcd_gotoxy(1,2);
+            printf(lcd_putc,"D%4.2f",ukt);
+            lcd_gotoxy(10,2);
+            printf(lcd_putc,"T%4.2f",temp1);
+            delay_ms(40); 
+            envioUART(temp1);
+           // printf("Control PID");
+            delay_ms(10);
+            if (v[0]=='1') {
+            state = Ajustando;
+ 
+            }
+             break;
+                         
+             }                    
+          }//end Switch
+
+}
+}

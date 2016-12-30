@@ -1,0 +1,16 @@
+--- Info 300 "Project Control PI.c" Line 25(1,1): More info:   PWM Resolution: 9.97 bits
+>>> Warning 203 "Project Control PI.c" Line 238(1,1): Condition always TRUE
+>>> Warning 216 "Project Control PI.c" Line 397(1,2): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 202 "Project Control PI.c" Line 40(12,16): Variable never used:   rtdr
+*** Error 71 "Project Control PI.c" Line 397(1,2): Out of ROM, A segment or the program is too large    MAIN
+  Seg 00800-00FFF, 0403 left, need 007ED
+  Seg 01000-017FF, 0800 left, need 00801
+  Seg 01800-01FFF, 0800 left, need 00801
+  Seg 00000-00002, 0000 left, need 00801 Reserved
+  Seg 00003-00003, 0000 left, need 00801
+  Seg 00004-00046, 0000 left, need 00801 Reserved
+  Seg 00047-007FF, 0020 left, need 00801
+  Seg 00800-00FFF, 0403 left, need 00801
+
+      1 Errors,  3 Warnings.
+Build Failed.

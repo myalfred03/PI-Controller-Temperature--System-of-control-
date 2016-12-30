@@ -1,0 +1,4 @@
+--- Info 300 "Project Control PI.c" Line 23(1,1): More info:   PWM Resolution: 8.97 bits
+*** Error 167 "Project Control PI.c" Line 54(18,19): Assignment invalid: lvalue is READ ONLY
+*** Error 51 "Project Control PI.c" Line 56(6,8): A numeric expression must appear here  ::
+*** Error 79 "Project Control PI.c" Line 206(42,43): Expect }
